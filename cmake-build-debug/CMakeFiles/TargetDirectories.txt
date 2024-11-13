@@ -1,0 +1,3 @@
+C:/Users/jpbol/OneDrive/Documentos/Universidade/2º ANO/3º semestre/IPOO/TP_POO/cmake-build-debug/CMakeFiles/TP_POO.dir
+C:/Users/jpbol/OneDrive/Documentos/Universidade/2º ANO/3º semestre/IPOO/TP_POO/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/jpbol/OneDrive/Documentos/Universidade/2º ANO/3º semestre/IPOO/TP_POO/cmake-build-debug/CMakeFiles/rebuild_cache.dir

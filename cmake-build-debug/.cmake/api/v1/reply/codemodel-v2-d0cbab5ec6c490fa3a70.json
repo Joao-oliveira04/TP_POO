@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.26"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "TP_POO",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "TP_POO::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-TP_POO-Debug-8b494311ff57c84bc2ba.json",
+					"name" : "TP_POO",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/jpbol/OneDrive/Documentos/Universidade/2\u00ba ANO/3\u00ba semestre/IPOO/TP_POO/cmake-build-debug",
+		"source" : "C:/Users/jpbol/OneDrive/Documentos/Universidade/2\u00ba ANO/3\u00ba semestre/IPOO/TP_POO"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 5
+	}
+}
