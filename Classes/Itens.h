@@ -8,11 +8,11 @@
 
 class Itens {
 /*
- * Caixa de Pandora
- * Arca do tesouro
- * Jaula
- * Mina
- * Surpresa
+ * Caixa de Pandora - mata 20% da tripulação
+ * Arca do tesouro - add +10% de ouro ao utilizador
+ * Jaula - aumenta tripulação sem exceder a capacidade maxima
+ * Mina - destroi a caravana
+ * Surpresa - inventar (se for igual a outro trabalho acusam de copia)
  */
 };
 
