@@ -1,10 +1,20 @@
 #include <iostream>
+#include "Buffer.h"
+#include "Classes/Buffer.h"
 
 using namespace std;
 
 int main() {
-    cout << "Hello, World!" << endl;
-    cout << "Rumo ao 20!" << endl;
-    cout << "Hora do lanche!" << endl;
+    int nl, nc ;
+
+    cout << "Quantidade de linhas que dejesa: " << endl;
+    cin >> nl ;
+
+    cout << "Quantidade de colunas que dejesa: " << endl;
+    cin >> nc ;
+
+    Buffer::Buffer(nl,nc);
+    Buffer::mostraBuffer();
+
     return 0;
 }
