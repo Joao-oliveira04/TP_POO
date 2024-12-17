@@ -78,7 +78,7 @@ void Buffer::escreve(char c){
     atualizaCursor();
 }
 
-//nao sei
+//move cursor
 void Buffer::escreve(const char* str){
     while (*str != '\0' && cursorColuna < numColunas) {
         escreve(*str++);
@@ -91,7 +91,7 @@ void Buffer::escreve(int numero) {
     escreve(numStr.c_str());
 }
 
-//nao sei
+//escreve cada character da string
 void Buffer::escreve(const string& str) {
     for (char c : str) {
         escreve(c);
@@ -119,23 +119,74 @@ Buffer& Buffer::operator<<(const string& str) {
     return *this;
 }
 
-//cria o tabuleiro inicial
-void Buffer::desenhaMoldura() {
-    //borda supe e inf
+//preenche o tabuleiro
+void Buffer::preencheBuffer() {
     for (int j = 0; j < numColunas; ++j) {
-        buffer[0][j] = '-';
-        buffer[numLinhas - 1][j] = '-';
+        for (int i = 0; i < numLinhas; ++i) {
+            buffer[i][j] = '.';
+        }
     }
-    //laterAis
-    for (int i = 0; i < numLinhas; ++i) {
-        buffer[i][0] = '|';
-        buffer[i][numColunas - 1] = '|';
-    }
-    //4 cantos
-    buffer[0][0] = '*';
-    buffer[0][numColunas - 1] = '*';
-    buffer[numLinhas - 1][0] = '*';
-    buffer[numLinhas - 1][numColunas - 1] = '*';
 }
+
+//preenche o tabuleiro
+void Buffer::geraMontanha() {
+    srand(time(NULL)); // Inicializa a semente do gerador de números aleatórios
+
+    int larguraMontanha, alturaMontanha;
+    int posicaoInicioX, posicaoInicioY;
+
+    // Gera múltiplas montanhas (neste exemplo, 3 montanhas aleatórias)
+    for (int montanha = 0; montanha < 3; ++montanha) {
+        // Largura e altura mínima das montanhas
+        larguraMontanha = rand() % 4 + 2;  // Largura entre 2 e 5 colunas
+        alturaMontanha = rand() % 3 + 2;   // Altura entre 2 e 4 linhas
+
+        // Gera posição inicial da montanha garantindo que fique dentro dos limites
+        posicaoInicioX = rand() % (numLinhas - alturaMontanha);
+        posicaoInicioY = rand() % (numColunas - larguraMontanha);
+
+        // Preenche o buffer com a montanha ('+')
+        for (int i = 0; i < alturaMontanha; ++i) {
+            for (int j = 0; j < larguraMontanha; ++j) {
+                buffer[posicaoInicioX + i][posicaoInicioY + j] = '+';
+            }
+        }
+    }
+}
+
+void Buffer::geraCidades(int numCidades) {
+    srand(time(NULL)); // Inicializa a semente do gerador de números aleatórios
+
+    char cidade = 'a'; // Letra inicial para representar as cidades
+    int posicaoX, posicaoY;
+
+    for (int i = 0; i < numCidades; ++i) {
+        // Encontre uma posição livre no tabuleiro
+        do {
+            posicaoX = rand() % numLinhas;  // Linha aleatória
+            posicaoY = rand() % numColunas; // Coluna aleatória
+        } while (buffer[posicaoX][posicaoY] != '.'); // Repete até encontrar posição vazia
+        if(buffer[posicaoX+1][posicaoY+1] == '.'
+           || buffer[posicaoX-1][posicaoY+1] == '.'
+           || buffer[posicaoX+1][posicaoY-1] == '.'
+           || buffer[posicaoX-1][posicaoY-1] == '.')//verifica se esta rodeado por montanhas
+        {
+            // Insere a cidade na posição encontrada
+            buffer[posicaoX][posicaoY] = cidade;
+
+            // Incrementa a letra da cidade ('a' -> 'b' -> 'c' ...)
+            if (cidade < 'z') {
+                ++cidade;
+            } else {
+                cidade = 'a'; // Volta para 'a' se chegar ao 'z'
+            }
+        }
+        else{
+            i--;
+        }
+    }
+}
+
+
 
 

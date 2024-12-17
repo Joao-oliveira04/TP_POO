@@ -1,5 +1,6 @@
 #ifndef TP_POO_BUFFER_H
 #define TP_POO_BUFFER_H
+
 using namespace std;
 #include <string>
 #include <iostream>
@@ -28,7 +29,8 @@ public:
     Buffer& operator<<(int numero);
     Buffer& operator<<(const string& str);
 
-    void desenhaMoldura();
+    void preencheBuffer();
+    void geraMontanha();
+    void geraCidades(int n);
 };
-
 #endif //TP_POO_BUFFER_H
