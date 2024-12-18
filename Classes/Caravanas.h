@@ -34,6 +34,11 @@ public:
     void consumirAgua();
     bool semAgua() const;
     bool semTripulantes() const;
+
+    char getSymbol() const;   // Retorna o símbolo da caravana
+    int getPosX() const;      // Retorna a posição X
+    int getPosY() const;      // Retorna a posição Y
+    void setPos(int x, int y);// Atualiza a posição
 };
 
 // Classe Derivada: Comercio

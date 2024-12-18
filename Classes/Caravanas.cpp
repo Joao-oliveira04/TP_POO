@@ -72,3 +72,17 @@ void Barbara::comportamentoAutonomo() {
     std::cout << "Caravana Bárbara procura atacar outras caravanas.\n";
     // Lógica adicional pode ser implementada aqui
 }
+
+char Caravana::getSymbol() const {
+    if (tipo == "Comércio") return 'C';
+    if (tipo == "Militar") return 'M';
+    if (tipo == "Bárbara") return 'B';
+    return '?';
+}
+
+int Caravana::getPosX() const { return posX; }
+int Caravana::getPosY() const { return posY; }
+void Caravana::setPos(int x, int y) {
+    posX = x;
+    posY = y;
+}
