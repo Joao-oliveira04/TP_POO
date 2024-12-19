@@ -30,7 +30,7 @@ public:
     virtual ~Caravana();
 
     virtual void mover(char direcao);
-    virtual void comportamentoAutonomo() = 0; // Método abstrato
+    virtual void comportamentoAutonomo() = 0; // Metodo abstrato
     void consumirAgua();
     bool semAgua() const;
     bool semTripulantes() const;
@@ -39,6 +39,14 @@ public:
     int getPosX() const;      // Retorna a posição X
     int getPosY() const;      // Retorna a posição Y
     void setPos(int x, int y);// Atualiza a posição
+    void destruir();   // destroi a caravana
+    int getTripulantes(); // tripulantes das caravanas
+    void setTripulantes(int i); // tripulantes
+    int getMaxTripulantes(); // numero max de tripulantes em cada caravanna
+    void setMoedasJoagor(int i); // moedas depois da atualizacao
+    void getMoedasJogador(); // moedas antes da atualizacao
+
+    static int getMoedasJoagor();
 
 };
 

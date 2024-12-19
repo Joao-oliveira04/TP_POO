@@ -16,6 +16,11 @@ int main() {
     deserto.geraDeserto();
     deserto.geraMontanha();
     deserto.geraCidades(5);
+    deserto.geraItens(5); // Por exemplo 5 itens
+    // verificar itens apos o movimentp das caransbas
+    deserto.verificaItens(&comercio);
+    deserto.verificaItens(&militar);
+    deserto.verificaItens(&barbara);
 
     // Cria caravanas
     Comercio comercio(3, 3);

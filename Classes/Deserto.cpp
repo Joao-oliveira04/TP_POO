@@ -66,3 +66,53 @@ void Deserto::geraCidades(int numCidades) {
         }
     }
 }
+
+// Gera os tais itens
+void Deserto::geraItens(int numItens)
+{
+    srand(time(NULL)); // Inicializa a semente de números aleatórios
+
+    for ( int i = 0; i < numItens; ++i)
+    {
+        int posX, posY;
+
+        // Gera posicoes aleatorias ate encontrar uma vazia
+
+        do
+        {
+            posX = rand() % buffer.getNumLinhas();
+            posY = rand() % buffer.getNumColunas();
+        } while (buffer.getChar(posX, posY) != '.');
+
+        // Sorteia o tipo de item
+        int tipo = rand() % 5; //5 tipos de itens, REVER
+        Itens* novoItens = nullptr;
+
+        switch (tipo)
+        {
+            case 0: novoItens = new CaixaDePandora(posX, posY); break;
+            case 1: novoItens = new ArcaDoTesouro(posX, posY); break;
+            case 2: novoItens = new Jaula(posX, posY); break;
+            case 3: novoItens = new Mina(posX, posY); break;
+            case 4: novoItens = new Surpresa(posX, posY); break;
+        }
+
+        if (novoItens)
+        {
+            itens.push_back(novoItens);
+            buffer.setChar(posX, posY, '*'); // Representacao no mapa
+        }
+    }
+}
+
+void Deserto::verificaItens(Caravana* caravana) {
+    for (auto it = itens.begin(); it != itens.end(); ) {
+        if ((*it)->getPosX() == caravana->getPosX() && (*it)->getPosY() == caravana->getPosY()) {
+            (*it)->aplicarEfeito(caravana);
+            delete *it; // Remove o item após ser apanhado
+            it = itens.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
