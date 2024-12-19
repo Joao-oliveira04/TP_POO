@@ -30,8 +30,10 @@ public:
     Buffer& operator<<(int numero);
     Buffer& operator<<(const string& str);
 
-    void preencheBuffer();
-    void geraMontanha();
-    void geraCidades(int n);
+    // Métodos para acessar o buffer
+    char getChar(int linha, int coluna) const { return buffer[linha][coluna]; }
+    void setChar(int linha, int coluna, char c) { buffer[linha][coluna] = c; }
+    int getNumLinhas() const { return numLinhas; }
+    int getNumColunas() const { return numColunas; }
 };
 #endif //TP_POO_BUFFER_H

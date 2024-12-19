@@ -39,6 +39,7 @@ public:
     int getPosX() const;      // Retorna a posição X
     int getPosY() const;      // Retorna a posição Y
     void setPos(int x, int y);// Atualiza a posição
+
 };
 
 // Classe Derivada: Comercio
@@ -63,6 +64,7 @@ public:
     Barbara(int x, int y);
     void comportamentoAutonomo() override;
 };
+
 
 #endif // CARAVANA_H
 

@@ -76,7 +76,7 @@ void Barbara::comportamentoAutonomo() {
 char Caravana::getSymbol() const {
     if (tipo == "Comércio") return 'C';
     if (tipo == "Militar") return 'M';
-    if (tipo == "Bárbara") return 'B';
+    if (tipo == "Bárbara") return '!';
     return '?';
 }
 
@@ -86,3 +86,4 @@ void Caravana::setPos(int x, int y) {
     posX = x;
     posY = y;
 }
+

@@ -1,16 +1,22 @@
 #include "Classes\buffer.h"
 #include "Classes\Caravanas.h"
+#include "Classes\Deserto.h"
 #include <iostream>
 #include <ctime>
 
 int main() {
     srand(time(NULL)); // Inicializa o gerador de números aleatórios
 
-    // Cria o tabuleiro (10x30)
+    // Cria o tabuleiro
     Buffer buffer(10, 30);
-    buffer.preencheBuffer();
-    buffer.geraMontanha();
-    buffer.geraCidades(5);
+    buffer.limpaBuffer();
+
+    // Cria o deserto e gera elementos
+    Deserto deserto(buffer);
+    deserto.geraDeserto();
+    deserto.geraMontanha();
+    deserto.geraCidades(5);
+
     // Cria caravanas
     Comercio comercio(3, 3);
     Militar militar(5, 5);
