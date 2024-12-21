@@ -4,7 +4,7 @@
 using namespace std;
 #include <string>
 #include <iostream>
-#include "Caravanas.h"
+//#include "Caravanas.h"
 
 class Buffer {
 private:
@@ -20,7 +20,6 @@ public:
 
     void posicionaCursor(int linha, int coluna);
     void atualizaCursor();
-    bool moveCaravana(Caravana* caravana, char direcao); // Move uma caravana
     void escreve(char c);
     void escreve(const char* str);
     void escreve(int numero);

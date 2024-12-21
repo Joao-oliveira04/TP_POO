@@ -10,7 +10,7 @@
 #define CARAVANA_H
 
 #include <string>
-
+#include "Buffer.h"
 // Classe Base: Caravana
 class Caravana {
 protected:
@@ -47,6 +47,7 @@ public:
     void getMoedasJogador(); // moedas antes da atualizacao
 
     static int getMoedasJoagor();
+    bool moveCaravana(Caravana* caravana, char direcao, Buffer buffer);
 
 };
 

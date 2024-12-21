@@ -117,32 +117,6 @@ Buffer& Buffer::operator<<(int numero) {
 
 
 
-// Move uma caravana
-bool Buffer::moveCaravana(Caravana* caravana, char direcao) {
-    int x = caravana->getPosX();
-    int y = caravana->getPosY();
-    int novoX = x;
-    int novoY = y;
-
-    switch (direcao) {
-        case 'N': novoX--; break;
-        case 'S': novoX++; break;
-        case 'O': novoY--; break;
-        case 'E': novoY++; break;
-        default: return false;
-    }
-
-    // Verifica se o movimento é válido
-    if (novoX >= 0 && novoX < numLinhas && novoY >= 0 && novoY < numColunas && buffer[novoX][novoY] != '+') {
-        buffer[x][y] = '.'; // Limpa posição atual
-        buffer[novoX][novoY] = caravana->getSymbol(); // Atualiza posição
-        caravana->setPos(novoX, novoY); // Atualiza coordenadas da caravana
-        return true;
-    }
-
-    return false;
-}
-
 
 
 
