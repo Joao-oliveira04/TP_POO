@@ -17,12 +17,14 @@ protected:
     std::string tipo;
     int posX, posY;           // Posição no tabuleiro
     int tripulantes;          // Número de tripulantes
+    int MaxTripulantes = 50;  // Número máximo de tripulantes
     int capacidadeAgua;       // Capacidade total de água
     int aguaAtual;            // Quantidade atual de água
     int capacidadeCarga;      // Capacidade total de carga
     int cargaAtual;           // Quantidade atual de carga
     int movimentosPorTurno;   // Número máximo de movimentos por turno
     int instantesSemTrip;     // Contador de instantes sem tripulantes
+    int moedas;               // moedas do jogador
     char direcaoAtual;        // Última direção de movimento
 
 public:
@@ -40,15 +42,13 @@ public:
     int getPosY() const;      // Retorna a posição Y
     void setPos(int x, int y);// Atualiza a posição
     void destruir();   // destroi a caravana
-    int getTripulantes(); // tripulantes das caravanas
+    int getTripulantes() {return tripulantes;}// tripulantes das caravanas
     void setTripulantes(int i); // tripulantes
-    int getMaxTripulantes(); // numero max de tripulantes em cada caravanna
-    void setMoedasJoagor(int i); // moedas depois da atualizacao
-    void getMoedasJogador(); // moedas antes da atualizacao
+    int getMaxTripulantes() {return MaxTripulantes;}// numero max de tripulantes em cada caravanna
+    void setMoedasJogador(int i); // moedas depois da atualizacao
+    int getMoedasJogador() {return moedas;}// moedas antes da atualizacao
 
-    static int getMoedasJoagor();
     bool moveCaravana(Caravana* caravana, char direcao, Buffer buffer);
-
 };
 
 // Classe Derivada: Comercio

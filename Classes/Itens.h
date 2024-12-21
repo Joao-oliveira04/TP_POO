@@ -31,6 +31,7 @@ public:
     int getPosY() const { return posY; }
     std::string getTipo() const { return tipo; }
 };
+
 // Subclasse: Caixa de Pandora
 class CaixaDePandora : public Itens
 {
@@ -59,7 +60,7 @@ public:
             // Obtem a quantidade de moedas atual do utilizador
             int moedasAtuais = caravana->getTripulantes(); // assumindo que a caravana sabe o valor do jogador
             int incremento = moedasAtuais * 0.1; // calcula os tais + 10% das moedas
-            caravana->setMoedasJoagor(moedasAtuais + incremento); // Atualiza as moedas do jogador
+            caravana->setMoedasJogador(moedasAtuais + incremento); // Atualiza as moedas do jogador
 
             std::cout << "Arca do Tesouro: Adicionou " << incremento
                       << " moedas ao jogador! Total: "

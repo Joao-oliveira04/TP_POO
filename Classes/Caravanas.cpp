@@ -34,7 +34,23 @@ void Caravana::consumirAgua() {
 
 bool Caravana::semAgua() const { return aguaAtual <= 0; }
 
+void Caravana::setTripulantes(int i){
+    if(i<0){
+        tripulantes = 0;
+    } else{
+        tripulantes = i;
+    }
+}
+
 bool Caravana::semTripulantes() const { return tripulantes == 0; }
+
+void Caravana::setMoedasJogador(int i) {
+    if (i < 0) {
+        tripulantes = 0;
+    } else {
+        tripulantes = i;
+    }
+}
 
 bool Caravana::moveCaravana(Caravana* caravana, char direcao, Buffer buffer) {
     int x = caravana->posX;
@@ -61,6 +77,12 @@ bool Caravana::moveCaravana(Caravana* caravana, char direcao, Buffer buffer) {
     return false;
 }
 
+void Caravana::destruir() {
+    tripulantes = 0;
+    aguaAtual = 0;
+    cargaAtual = 0;
+    std::cout << tipo << " foi destruída!\n";
+}
 
 // Implementação da classe Comercio
 Comercio::Comercio(int x, int y)
@@ -101,8 +123,7 @@ void Barbara::comportamentoAutonomo() {
 }
 
 char Caravana::getSymbol() const {
-    if (tipo == "Comércio") return 'C';
-    if (tipo == "Militar") return 'M';
+    if (tipo == "Comércio" || tipo == "Militar") return '1';
     if (tipo == "Bárbara") return '!';
     return '?';
 }
