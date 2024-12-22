@@ -5,12 +5,30 @@
 #include <cstdlib> // Para rand()
 #include <algorithm> // Para std::max
 
-// Implementação da classe base Caravana
-Caravana::Caravana(std::string t, int x, int y, int trip, int capAgua, int capCarga, int movimentos)
-        : tipo(t), posX(x), posY(y), tripulantes(trip), capacidadeAgua(capAgua),
-          aguaAtual(capAgua), capacidadeCarga(capCarga), cargaAtual(0),
-          movimentosPorTurno(movimentos), instantesSemTrip(0), direcaoAtual('N') {}
+int Caravana::totalCaravanas = 0; // Inicializa a variável estática
 
+// Implementação da classe base Caravana
+Caravana::Caravana(std::string t, int trip, int capAgua, int capCarga, int movimentos, Buffer& buffer)
+        : tipo(t), tripulantes(trip), capacidadeAgua(capAgua),
+          aguaAtual(capAgua), capacidadeCarga(capCarga), cargaAtual(0),
+          movimentosPorTurno(movimentos), instantesSemTrip(0), direcaoAtual('N'), buffer(buffer) {
+    encontrarPosicaoValida();
+    nCaravana = ++totalCaravanas; // Incrementa e atribui o número da caravana
+    std::cout << "Caravana criada " << nCaravana << " em (" << posX << ", " << posY << ").\n";
+    if(tipo == "Bárbara"){
+        buffer.setChar(posX, posY, '!'); // Converte nCaravana para caractere
+    } else{
+        buffer.setChar(posX, posY, '0' + nCaravana); // Converte nCaravana para caractere
+    }
+
+}
+
+void Caravana::encontrarPosicaoValida() {
+    do {
+        posX = rand() % buffer.getNumLinhas();
+        posY = rand() % buffer.getNumColunas();
+    } while (buffer.getChar(posX, posY) != '.');
+}
 Caravana::~Caravana() {}
 
 void Caravana::mover(char direcao) {
@@ -46,13 +64,13 @@ bool Caravana::semTripulantes() const { return tripulantes == 0; }
 
 void Caravana::setMoedasJogador(int i) {
     if (i < 0) {
-        tripulantes = 0;
+        moedas = 0;
     } else {
-        tripulantes = i;
+        moedas = i;
     }
 }
 
-bool Caravana::moveCaravana(Caravana* caravana, char direcao, Buffer buffer) {
+bool Caravana::moveCaravana(Caravana* caravana, char direcao) {
     int x = caravana->posX;
     int y = caravana->posY;
     int novoX = x;
@@ -67,14 +85,41 @@ bool Caravana::moveCaravana(Caravana* caravana, char direcao, Buffer buffer) {
     }
 
     // Verifica se o movimento é válido
-    if (novoX >= 0 && novoX < buffer.getNumLinhas() && novoY >= 0 && novoY < buffer.getNumColunas() && buffer.getChar(novoX,novoY) != '+') {
-        buffer.setChar(x,y,'.'); // Limpa posição atual
-        buffer.setChar(x,y,caravana->getSymbol()); // Atualiza posição
+    if (novoX >= 0 && novoX < buffer.getNumLinhas() && novoY >= 0 && novoY < buffer.getNumColunas() && buffer.getChar(novoX, novoY) != '+') {
+        buffer.setChar(x, y, '.'); // Limpa posição atual
+        if(tipo == "Bárbara"){
+            buffer.setChar(novoX, novoY, '!'); // Converte nCaravana para caractere
+        } else{
+            buffer.setChar(novoX, novoY, '0' + nCaravana); // Converte nCaravana para caractere
+        }
         caravana->setPos(novoX, novoY); // Atualiza coordenadas da caravana
         return true;
     }
 
     return false;
+}
+
+void Caravana::combate(Caravana* outraCaravana) {
+    int rollCaravana1 = rand() % tripulantes;
+    int rollCaravana2 = rand() % outraCaravana->getTripulantes();
+    if(rollCaravana1 > rollCaravana2){
+        outraCaravana->setTripulantes(outraCaravana->getTripulantes() - rollCaravana1*2);
+        tripulantes = tripulantes*0.8;
+        std::cout << tipo << " venceu o combate contra " << outraCaravana->tipo << "!\n";
+        std::cout << tipo << " tem " << outraCaravana->getTripulantes() << " tripulantes!\n";
+        std::cout << tipo << " tem " << tripulantes << " tripulantes!\n";
+    } else if(rollCaravana1 < rollCaravana2){
+        tripulantes -= rollCaravana2*2;
+        if(tripulantes < 0){
+            tripulantes = 0;
+        }
+        outraCaravana->setTripulantes(outraCaravana->getTripulantes()*0.8);
+        std::cout << outraCaravana->tipo << " venceu o combate contra " << tipo << "!\n";
+        std::cout << tipo << " tem " << outraCaravana->getTripulantes() << " tripulantes!\n";
+        std::cout << tipo << " tem " << tripulantes << " tripulantes!\n";
+    } else{
+        std::cout << "O combate entre " << tipo << " e " << outraCaravana->tipo << " terminou empatado!\n";
+    }
 }
 
 void Caravana::destruir() {
@@ -85,8 +130,8 @@ void Caravana::destruir() {
 }
 
 // Implementação da classe Comercio
-Comercio::Comercio(int x, int y)
-        : Caravana("Comércio", x, y, 20, 200, 40, 2) {}
+Comercio::Comercio(int x, int y, Buffer& buffer)
+        : Caravana("Comércio", 20, 200, 40, 2, buffer) {}
 
 void Comercio::comportamentoAutonomo() {
     std::cout << "Caravana de Comércio procura itens ou proteção próxima.\n";
@@ -100,8 +145,8 @@ void Comercio::moverSemTripulantes() {
 }
 
 // Implementação da classe Militar
-Militar::Militar(int x, int y)
-        : Caravana("Militar", x, y, 40, 400, 5, 3) {}
+Militar::Militar(int x, int y, Buffer& buffer)
+        : Caravana("Militar", 40, 400, 5, 3, buffer) {}
 
 void Militar::comportamentoAutonomo() {
     std::cout << "Caravana Militar verifica por caravanas bárbaras próximas.\n";
@@ -114,19 +159,15 @@ void Militar::moverSemTripulantes() {
 }
 
 // Implementação da classe Barbara
-Barbara::Barbara(int x, int y)
-        : Caravana("Bárbara", x, y, 30, 100, 10, 2) {}
+Barbara::Barbara(int x, int y, Buffer& buffer)
+        : Caravana("Bárbara", 30, 100, 10, 2, buffer) {}
 
 void Barbara::comportamentoAutonomo() {
     std::cout << "Caravana Bárbara procura atacar outras caravanas.\n";
     // Lógica adicional pode ser implementada aqui
 }
 
-char Caravana::getSymbol() const {
-    if (tipo == "Comércio" || tipo == "Militar") return '1';
-    if (tipo == "Bárbara") return '!';
-    return '?';
-}
+
 
 int Caravana::getPosX() const { return posX; }
 int Caravana::getPosY() const { return posY; }

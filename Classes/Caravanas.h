@@ -14,8 +14,10 @@
 // Classe Base: Caravana
 class Caravana {
 protected:
+    Buffer& buffer;
     std::string tipo;
     int posX, posY;           // Posição no tabuleiro
+    int nCaravana;            // Número da caravana
     int tripulantes;          // Número de tripulantes
     int MaxTripulantes = 50;  // Número máximo de tripulantes
     int capacidadeAgua;       // Capacidade total de água
@@ -26,9 +28,11 @@ protected:
     int instantesSemTrip;     // Contador de instantes sem tripulantes
     int moedas;               // moedas do jogador
     char direcaoAtual;        // Última direção de movimento
+    static int totalCaravanas;// Número da caravana
 
+    void encontrarPosicaoValida(); // Método para encontrar uma posição válida
 public:
-    Caravana(std::string t, int x, int y, int trip, int capAgua, int capCarga, int movimentos);
+    Caravana(std::string t, int trip, int capAgua, int capCarga, int movimentos, Buffer& buf);
     virtual ~Caravana();
 
     virtual void mover(char direcao);
@@ -48,13 +52,15 @@ public:
     void setMoedasJogador(int i); // moedas depois da atualizacao
     int getMoedasJogador() {return moedas;}// moedas antes da atualizacao
 
-    bool moveCaravana(Caravana* caravana, char direcao, Buffer buffer);
+    bool moveCaravana(Caravana* caravana, char direcao);
+    void combate(Caravana* outraCaravana);
+
 };
 
 // Classe Derivada: Comercio
 class Comercio : public Caravana {
 public:
-    Comercio(int x, int y);
+    Comercio(int x, int y, Buffer& buffer);
     void comportamentoAutonomo() override;
     void moverSemTripulantes();
 };
@@ -62,7 +68,7 @@ public:
 // Classe Derivada: Militar
 class Militar : public Caravana {
 public:
-    Militar(int x, int y);
+    Militar(int x, int y, Buffer& buffer);
     void comportamentoAutonomo() override;
     void moverSemTripulantes();
 };
@@ -70,7 +76,7 @@ public:
 // Classe Derivada: Barbara
 class Barbara : public Caravana {
 public:
-    Barbara(int x, int y);
+    Barbara(int x, int y, Buffer& buffer);
     void comportamentoAutonomo() override;
 };
 
