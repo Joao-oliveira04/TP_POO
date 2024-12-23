@@ -14,9 +14,9 @@ int main() {
     // Cria o deserto e gera elementos
     Deserto deserto(buffer);
     deserto.geraDeserto();
-    deserto.geraMontanha();
+    //deserto.geraMontanha();
     deserto.geraCidades(5);
-    deserto.geraItens(5); // Por exemplo 5 itens
+    //deserto.geraItens(5); // Por exemplo 5 itens
 
     // Cria caravanas
     Comercio comercio(3, 3, buffer);
@@ -38,11 +38,12 @@ int main() {
     for (int i = 0; i < 5; ++i) {
         buffer.mostraBuffer();
         std::cout << "Turno " << i + 1 << "\n";
-
         comercio.moveCaravana(&comercio, 'E');
         militar.moveCaravana(&militar, 'N');
         barbara.moveCaravana(&barbara, 'O');
-
+        if(barbara.semTripulantes() || militar.semTripulantes() || comercio.semTripulantes()){
+            barbara.combate(&militar);
+        }
         std::cout << "\n";
     }
 

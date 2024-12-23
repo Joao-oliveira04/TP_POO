@@ -43,28 +43,36 @@ void Deserto::geraMontanha() {
 
 // Gera cidades no tabuleiro
 void Deserto::geraCidades(int numCidades) {
-    srand(time(NULL)); // Inicializa a semente do gerador de números aleatórios
-
-    char cidade = 'a'; // Letra inicial para representar as cidades
-    int posicaoX, posicaoY;
-
     for (int i = 0; i < numCidades; ++i) {
+        int x, y;
         do {
-                posicaoX = rand() % buffer.getNumLinhas();
-                posicaoY = rand() % buffer.getNumColunas();
-        } while (buffer.getChar(posicaoX, posicaoY) != '.' && (buffer.getChar(posicaoX + 1, posicaoY + 1) == '.' ||
-                 buffer.getChar(posicaoX - 1, posicaoY + 1) == '.' ||
-                 buffer.getChar(posicaoX + 1, posicaoY - 1) == '.' ||
-                 buffer.getChar(posicaoX - 1, posicaoY - 1) == '.'));  // Garante posição vazia
-
-        buffer.setChar(posicaoX, posicaoY, cidade);
-        // Incrementa a letra da cidade ('a' -> 'b' -> 'c' ...)
-        if (cidade < 'z') {
-            ++cidade;
-        } else {
-            cidade = 'a';
+            x = rand() % buffer.getNumLinhas();
+            y = rand() % buffer.getNumColunas();
+        } while (buffer.getChar(x, y) != '.');
+        if(x==0){
+            x++;
         }
+        if(y==0){
+            y++;
+        }
+        std::string nome(1, 'A' + i); // Nome único da cidade
+        Cidade* cidade = new Cidade(nome, x, y, buffer);
+        cidades.push_back(cidade);
     }
+}
+
+void Deserto::adicionaCidade(Cidade* cidade) {
+    cidades.push_back(cidade);
+}
+
+void Deserto::listarCidades() const {
+    for (const auto& cidade : cidades) {
+        std::cout << "Cidade " << cidade->getNome() << " em (" << cidade->getPosX() << ", " << cidade->getPosY() << ")\n";
+    }
+}
+
+void Deserto::adicionaCaravana(Caravana* caravana) {
+    caravanas.push_back(caravana);
 }
 
 // Gera os tais itens

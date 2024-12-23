@@ -51,10 +51,9 @@ public:
     int getMaxTripulantes() {return MaxTripulantes;}// numero max de tripulantes em cada caravanna
     void setMoedasJogador(int i); // moedas depois da atualizacao
     int getMoedasJogador() {return moedas;}// moedas antes da atualizacao
-
+    Caravana* getCaravana(int nCaravana);// retorna a caravana
     bool moveCaravana(Caravana* caravana, char direcao);
     void combate(Caravana* outraCaravana);
-
 };
 
 // Classe Derivada: Comercio

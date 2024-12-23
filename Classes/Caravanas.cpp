@@ -55,6 +55,7 @@ bool Caravana::semAgua() const { return aguaAtual <= 0; }
 void Caravana::setTripulantes(int i){
     if(i<0){
         tripulantes = 0;
+        this->destruir();
     } else{
         tripulantes = i;
     }
@@ -84,14 +85,50 @@ bool Caravana::moveCaravana(Caravana* caravana, char direcao) {
         default: return false;
     }
 
-    // Verifica se o movimento é válido
-    if (novoX >= 0 && novoX < buffer.getNumLinhas() && novoY >= 0 && novoY < buffer.getNumColunas() && buffer.getChar(novoX, novoY) != '+') {
+    /*if(novoY <= 0){
         buffer.setChar(x, y, '.'); // Limpa posição atual
         if(tipo == "Bárbara"){
-            buffer.setChar(novoX, novoY, '!'); // Converte nCaravana para caractere
+            buffer.setChar(x, buffer.getNumLinhas() -1, '!'); // Converte nCaravana para caractere
+            return true;
         } else{
-            buffer.setChar(novoX, novoY, '0' + nCaravana); // Converte nCaravana para caractere
+            buffer.setChar(x, buffer.getNumLinhas() -1, '0' + nCaravana); // Converte nCaravana para caractere
         }
+        return true;
+    } else if (novoY >= buffer.getNumColunas()){
+        buffer.setChar(x, y, '.'); // Limpa posição atual
+        if(tipo == "Bárbara"){
+            buffer.setChar(x, 0, '!'); // Converte nCaravana para caractere
+        } else{
+            buffer.setChar(x, 0, '0' + nCaravana); // Converte nCaravana para caractere
+        }
+        return true;
+    } else if(novoX <= 0){
+        buffer.setChar(x, y, '.'); // Limpa posição atual
+        if(tipo == "Bárbara"){
+            buffer.setChar(buffer.getNumColunas() -1, y, '!'); // Converte nCaravana para caractere
+        } else{
+            buffer.setChar(buffer.getNumColunas() -1, y, '0' + nCaravana); // Converte nCaravana para caractere
+        }
+        return true;
+    } else if (novoX >= buffer.getNumLinhas()){
+        buffer.setChar(x, y, '.'); // Limpa posição atual
+        if(tipo == "Bárbara"){
+            buffer.setChar(0, y, '!'); // Converte nCaravana para caractere
+        } else{
+            buffer.setChar(0, y, '0' + nCaravana); // Converte nCaravana para caractere
+        }
+        return true;
+    }*/
+
+    // Verifica se o movimento é válido
+    if (novoX >= 0 && novoX < buffer.getNumLinhas() && novoY >= 0 && novoY < buffer.getNumColunas() && buffer.getChar(novoX, novoY) == '.') {
+        buffer.setChar(x, y, '.'); // Limpa posição atual
+        if(tipo == "Bárbara"){
+            buffer.setChar(novoX, novoY, '!'); // Atualiza posição com as novas coordenadas
+        } else{
+            buffer.setChar(novoX, novoY, '0' + nCaravana); // Atualiza posição com as novas coordenadas
+        }
+
         caravana->setPos(novoX, novoY); // Atualiza coordenadas da caravana
         return true;
     }
@@ -99,9 +136,25 @@ bool Caravana::moveCaravana(Caravana* caravana, char direcao) {
     return false;
 }
 
+char Caravana::getSymbol() const {
+    if(tipo == "Bárbara"){
+        return '!';
+    }
+    return '0' + nCaravana;
+}
+
+Caravana *Caravana::getCaravana(int nCaravana) {
+    if (nCaravana == 0) {
+        return nullptr;
+    }
+    return nullptr;
+}
+
 void Caravana::combate(Caravana* outraCaravana) {
     int rollCaravana1 = rand() % tripulantes;
     int rollCaravana2 = rand() % outraCaravana->getTripulantes();
+    std::cout << "entrei";
+    std::cout << "entrei";
     if(rollCaravana1 > rollCaravana2){
         outraCaravana->setTripulantes(outraCaravana->getTripulantes() - rollCaravana1*2);
         tripulantes = tripulantes*0.8;
@@ -112,6 +165,7 @@ void Caravana::combate(Caravana* outraCaravana) {
         tripulantes -= rollCaravana2*2;
         if(tripulantes < 0){
             tripulantes = 0;
+            this->destruir();
         }
         outraCaravana->setTripulantes(outraCaravana->getTripulantes()*0.8);
         std::cout << outraCaravana->tipo << " venceu o combate contra " << tipo << "!\n";
@@ -120,6 +174,7 @@ void Caravana::combate(Caravana* outraCaravana) {
     } else{
         std::cout << "O combate entre " << tipo << " e " << outraCaravana->tipo << " terminou empatado!\n";
     }
+
 }
 
 void Caravana::destruir() {
