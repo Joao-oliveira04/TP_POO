@@ -8,7 +8,7 @@ int main() {
     srand(time(NULL)); // Inicializa o gerador de números aleatórios
 
     // Cria o tabuleiro
-    Buffer buffer(7, 30);
+    Buffer buffer(10, 30);
     buffer.limpaBuffer();
 
     // Cria o deserto e gera elementos
@@ -21,7 +21,11 @@ int main() {
     // Cria caravanas
     Comercio comercio(3, 3, buffer);
     Militar militar(5, 5, buffer);
-    Barbara barbara(1, 1, buffer);
+    Barbara barbara(7, 7, buffer);
+
+    // Vetor de caravanas do jogador
+    std::vector<Caravana*> caravanasJogador = { &comercio, &militar };
+
 
     std::cout << "\n";
     // verificar itens apos o movimentp das caransbas
@@ -35,7 +39,7 @@ int main() {
     barbara.moveCaravana(&barbara, 'E');
 
     // Simula movimentos
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 10; ++i) {
         buffer.mostraBuffer();
         std::cout << "Turno " << i + 1 << "\n";
         comercio.moveCaravana(&comercio, 'E');

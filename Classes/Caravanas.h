@@ -11,6 +11,7 @@
 
 #include <string>
 #include "Buffer.h"
+#include <cmath> // Para cálculos matemáticos (distância)
 // Classe Base: Caravana
 class Caravana {
 protected:
@@ -54,6 +55,12 @@ public:
     Caravana* getCaravana(int nCaravana);// retorna a caravana
     bool moveCaravana(Caravana* caravana, char direcao);
     void combate(Caravana* outraCaravana);
+};
+
+class Barbara : public Caravana {
+public:
+    Barbara(int x, int y);
+    void comportamentoAutonomo(std::vector<Caravana*>& caravanasJogador, Buffer& buffer); // Recebe lista de caravanas do jogador e buffer
 };
 
 // Classe Derivada: Comercio

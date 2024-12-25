@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib> // Para rand()
 #include <algorithm> // Para std::max
+#include <vector>
 
 int Caravana::totalCaravanas = 0; // Inicializa a variável estática
 
@@ -21,6 +22,49 @@ Caravana::Caravana(std::string t, int trip, int capAgua, int capCarga, int movim
         buffer.setChar(posX, posY, '0' + nCaravana); // Converte nCaravana para caractere
     }
 
+}
+
+void barbara::comportamentoAutonomo(vector<Caravana*>& caravanasJogador, Buffer& buffer) {
+    int alvoX = -1, alvoY = -1;
+    bool encontrouCaravana = false;
+
+    // Verifica se há caravanas do jogador a até 8 posições de distância
+    for (auto* caravana : caravanasJogador) {
+        int distanciaX = std::abs(caravana->getPosX() - posX);
+        int distanciaY = std::abs(caravana->getPosY() - posY);
+
+        if ((distanciaX <= 8 && distanciaY == 0) || (distanciaY <= 8 && distanciaX == 0)) {
+            alvoX = caravana->getPosX();
+            alvoY = caravana->getPosY();
+            encontrouCaravana = true;
+            break; // Para na primeira caravana encontrada
+        }
+    }
+
+    // Determina a direção do movimento
+    char direcao = ' ';
+    if (encontrouCaravana) {
+        if (alvoX < posX) direcao = 'N';
+        else if (alvoX > posX) direcao = 'S';
+        else if (alvoY < posY) direcao = 'O';
+        else if (alvoY > posY) direcao = 'E';
+    } else {
+        // Movimento aleatório
+        int movimento = rand() % 4;
+        switch (movimento) {
+        case 0: direcao = 'N'; break;
+        case 1: direcao = 'S'; break;
+        case 2: direcao = 'O'; break;
+        case 3: direcao = 'E'; break;
+        }
+    }
+
+    // Tenta mover-se no buffer na direção escolhida
+    if (!buffer.moveCaravana(this, direcao)) {
+        std::cout << "Caravana Bárbara não conseguiu mover-se para " << direcao << "!\n";
+    } else {
+        std::cout << "Caravana Bárbara moveu-se para " << direcao << ".\n";
+    }
 }
 
 void Caravana::encontrarPosicaoValida() {
