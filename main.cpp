@@ -4,6 +4,8 @@
 #include <iostream>
 #include <ctime>
 
+#include "Classes/Jogo.h"
+
 int main() {
     srand(time(NULL)); // Inicializa o gerador de números aleatórios
 
@@ -50,6 +52,10 @@ int main() {
         }
         std::cout << "\n";
     }
+
+
+    Jogo jogo(10, 30, 1000); // cria o jogo com 10x30 e 1000 moedas iniciais
+    jogo.iniciar(); // incia a simulacao
 
     return 0;
 }

@@ -13,4 +13,6 @@ add_executable(TP_POO main.cpp
         Classes/Itens.cpp
         Classes/Itens.h
         Classes/Buffer.cpp
-        Classes/Buffer.h)
+        Classes/Buffer.h
+        Classes/Jogo.cpp
+        Classes/Jogo.h)
