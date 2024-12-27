@@ -19,11 +19,11 @@ private:
     std::vector<Barbara*> barbaras;  // caravana bárbaras
     int moedasJogador;   // moedas jogador
     int instantesDecorridos;  // contador de instantes
-    int combatesVencidos // contador de combates
-    bool jogoAtivo;  // estado do jogo
+    int combatesVencidos; // contador de combates
+    bool jogoAtivo = true;  // estado do jogo
 
     // metodos auxiliares
-    void preocessarComando(const std::string& comando);
+    void processarComando(const std::string& comando);
     void verificarCondicoesDeTermino();
     void mostrarPontuacaoFinal();
 

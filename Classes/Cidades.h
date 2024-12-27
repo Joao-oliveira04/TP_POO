@@ -23,6 +23,7 @@ public:
     int getPosY() const;
     void entraCaravana(Caravana* caravana);
     void saiCaravana(Caravana* caravana);
+    void buyTripulantes(Caravana* caravana);
     void listarCaravanas() const;
     bool isAccessible() const;
 };

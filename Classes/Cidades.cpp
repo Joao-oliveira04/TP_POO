@@ -47,6 +47,16 @@ void Cidade::listarCaravanas() const {
     }
 }
 
+void Cidade::buyTripulantes(Caravana* caravana){
+    if(caravana->getMoedasJogador() >= 10){
+        caravana->setTripulantes(caravana->getTripulantes() + 10);
+        caravana->setMoedasJogador(caravana->getMoedasJogador() - 10);
+        std::cout << "Caravana " << caravana->getSymbol() << " comprou 10 tripulantes!\n";
+    } else{
+        std::cout << "Caravana " << caravana->getSymbol() << " não tem moedas suficientes para comprar tripulantes!\n";
+    }
+}
+
 bool Cidade::isAccessible() const {
     // Verifica se pelo menos um lado da cidade é acessível (deserto)
     return (buffer.getChar(posX - 1, posY) == '.' || buffer.getChar(posX + 1, posY) == '.' ||

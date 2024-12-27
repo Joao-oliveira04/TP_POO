@@ -86,6 +86,12 @@ public:
     void comportamentoAutonomo() override;
 };
 
+class Infetada : public Caravana {
+public:
+    Infetada(int x, int y, Buffer& buffer);
+    void comportamentoAutonomo() override;
+};
+
 
 #endif // CARAVANA_H
 

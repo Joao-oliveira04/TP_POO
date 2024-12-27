@@ -15,17 +15,17 @@ Jogo::Jogo(int linhas, int colunas, int moedasIniciais)
     deserto.geraCidades(5); // Exemplo: 5 cidades
 
     // Adiciona caravanas do jogador
-    caravanas.push_back(new Comercio(3, 3));
-    caravanas.push_back(new Militar(5, 5));
+    caravanas.push_back(new Comercio(3, 3,buffer));
+    caravanas.push_back(new Militar(5, 5,buffer));
 
     // Adiciona uma caravana bárbara
     barbaras.push_back(new Barbara(7, 7));
 
     // Posiciona caravanas no buffer
     for (auto* caravana : caravanas)
-        buffer.moveCaravana(caravana, ' '); // Posiciona no mapa inicial
+        caravana->moveCaravana(caravana, ' '); // Posiciona no mapa inicial
     for (auto* barbara : barbaras)
-        buffer.moveCaravana(barbara, ' ');
+        barbara->moveCaravana(barbara, ' ');
 }
 
 Jogo::~Jogo() {
@@ -66,7 +66,7 @@ void Jogo::processarComando(const std::string& comando) {
         int id = comando[5] - '0';             // ID da caravana
         char direcao = comando[7];             // Direção
         if (id >= 0 && id < caravanas.size()) {
-            buffer.moveCaravana(caravanas[id], direcao);
+            caravanas[id]->moveCaravana(caravanas[id], direcao);
         }
     }
     // Adiciona outros comandos conforme necessário
