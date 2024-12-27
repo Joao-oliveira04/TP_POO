@@ -19,7 +19,7 @@ Jogo::Jogo(int linhas, int colunas, int moedasIniciais)
     caravanas.push_back(new Militar(5, 5,buffer));
 
     // Adiciona uma caravana bárbara
-    barbaras.push_back(new Barbara(7, 7));
+    caravanas.push_back(new Barbara(7, 7,buffer));
 
     // Posiciona caravanas no buffer
     for (auto* caravana : caravanas)

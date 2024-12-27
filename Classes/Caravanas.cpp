@@ -24,7 +24,7 @@ Caravana::Caravana(std::string t, int trip, int capAgua, int capCarga, int movim
 
 }
 
-void barbara::comportamentoAutonomo(vector<Caravana*>& caravanasJogador, Buffer& buffer) {
+void Barbara::comportamentoAutonomo(vector<Caravana*>& caravanasJogador, Buffer& buffer) {
     int alvoX = -1, alvoY = -1;
     bool encontrouCaravana = false;
 
@@ -60,7 +60,7 @@ void barbara::comportamentoAutonomo(vector<Caravana*>& caravanasJogador, Buffer&
     }
 
     // Tenta mover-se no buffer na direção escolhida
-    if (!buffer.moveCaravana(this, direcao)) {
+    if (!this->moveCaravana(this, direcao)) {
         std::cout << "Caravana Bárbara não conseguiu mover-se para " << direcao << "!\n";
     } else {
         std::cout << "Caravana Bárbara moveu-se para " << direcao << ".\n";
@@ -260,12 +260,6 @@ void Militar::moverSemTripulantes() {
 // Implementação da classe Barbara
 Barbara::Barbara(int x, int y, Buffer& buffer)
         : Caravana("Bárbara", 30, 100, 10, 2, buffer) {}
-
-void Barbara::comportamentoAutonomo() {
-    std::cout << "Caravana Bárbara procura atacar outras caravanas.\n";
-    // Lógica adicional pode ser implementada aqui
-}
-
 
 
 int Caravana::getPosX() const { return posX; }

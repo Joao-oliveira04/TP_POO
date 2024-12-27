@@ -10,6 +10,7 @@
 #define CARAVANA_H
 
 #include <string>
+#include <vector>
 #include "Buffer.h"
 #include <cmath> // Para cálculos matemáticos (distância)
 // Classe Base: Caravana
@@ -37,7 +38,7 @@ public:
     virtual ~Caravana();
 
     virtual void mover(char direcao);
-    virtual void comportamentoAutonomo() = 0; // Metodo abstrato
+    virtual void comportamentoAutonomo(); // Metodo abstrato
     void consumirAgua();
     bool semAgua() const;
     bool semTripulantes() const;
@@ -57,9 +58,10 @@ public:
     void combate(Caravana* outraCaravana);
 };
 
+// Classe Derivada: Barbara
 class Barbara : public Caravana {
 public:
-    Barbara(int x, int y);
+    Barbara(int x, int y, Buffer& buffer);
     void comportamentoAutonomo(std::vector<Caravana*>& caravanasJogador, Buffer& buffer); // Recebe lista de caravanas do jogador e buffer
 };
 
@@ -79,13 +81,7 @@ public:
     void moverSemTripulantes();
 };
 
-// Classe Derivada: Barbara
-class Barbara : public Caravana {
-public:
-    Barbara(int x, int y, Buffer& buffer);
-    void comportamentoAutonomo() override;
-};
-
+// Classe Derivada: Infetada
 class Infetada : public Caravana {
 public:
     Infetada(int x, int y, Buffer& buffer);
