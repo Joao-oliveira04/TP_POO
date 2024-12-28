@@ -15,6 +15,7 @@ private:
     Buffer& buffer; // Referência ao buffer onde será desenhado o deserto
     std::vector<Itens*> itens; // Lista de itens no deserto
     std::vector<Caravana*> caravanas; // Lista de caravanas no deserto
+    std::vector<Caravana*> Barbaras; // Lista de cidades no deserto
     std::vector<Cidade*> cidades; // Lista de cidades no deserto
 
 public:
@@ -24,6 +25,7 @@ public:
     void geraMontanha();    // Gera montanhas no tabuleiro
     void geraCidades(int numCidades); // Gera cidades no tabuleiro
     void geraItens(int numItens); // Novo mtodo para gerar itens
+    void geraBarbara(); // Gera uma caravana bárbara
     void verificaItens(Caravana* caravana); // Aplicar o efeito dos itens
     void adicionaCaravana(Caravana* caravana); // Adiciona caravana ao deserto
     vector<Caravana*> getCaravanas() const; // Retorna as caravanas

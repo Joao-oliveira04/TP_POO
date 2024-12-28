@@ -41,6 +41,15 @@ void Deserto::geraMontanha() {
     }
 }
 
+void Deserto::geraBarbara() {
+    int x, y;
+    do {
+        x = rand() % buffer.getNumLinhas();
+        y = rand() % buffer.getNumColunas();
+    } while (buffer.getChar(x, y) != '.');
+    Barbaras.push_back(new Barbara(x, y, buffer));
+}
+
 // Gera cidades no tabuleiro
 void Deserto::geraCidades(int numCidades) {
     for (int i = 0; i < numCidades; ++i) {
