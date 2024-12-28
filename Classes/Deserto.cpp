@@ -57,6 +57,8 @@ void Deserto::geraCidades(int numCidades) {
         }
         std::string nome(1, 'A' + i); // Nome único da cidade
         Cidade* cidade = new Cidade(nome, x, y, buffer);
+        cidade->addCaravana(new Comercio(x, y, buffer));
+        cidade->addCaravana(new Militar(x, y, buffer));
         cidades.push_back(cidade);
     }
 }
