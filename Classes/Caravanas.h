@@ -33,7 +33,9 @@ protected:
     char direcaoAtual;        // Última direção de movimento
     static int totalCaravanas;// Número da caravana
 
-    void encontrarPosicaoValida(); // Método para encontrar uma posição válida
+    void encontrarPosicaoValida(); // Metodo para encontrar uma posição válida
+    bool autonomo = false; // Indica se a caravana está em modo autonomo
+
 public:
     Caravana(std::string t, int trip, int capAgua, int capCarga, int movimentos, Buffer& buf);
     virtual ~Caravana();
@@ -61,6 +63,8 @@ public:
     int getCargaAtual() {return cargaAtual;}
     void setCargaAtual(int novaCarga) {cargaAtual = novaCarga;}
     int getCapacidadeCarga() const { return capacidadeCarga; }
+    void setAutonomo(bool estado) { autonomo = estado; }
+    bool isAutonomo() const { return autonomo; }
 };
 
 // Classe Derivada: Barbara

@@ -68,6 +68,11 @@ void Jogo::processarComando(const std::string& comando) {
         if (id >= 0 && id < caravanas.size()) {
             caravanas[id]->moveCaravana(caravanas[id], direcao);
         }
+        for (auto* caravana : caravanas) {
+            if (caravana->isAutonomo() && !caravana->semTripulantes()) {
+                caravana->comportamentoAutonomo(); // Já implementado para cada tipo de caravana
+            }
+        }
     }
     // Adiciona outros comandos conforme necessário
 }
@@ -297,6 +302,86 @@ void Jogo::processarComando(const std::string& comando) {
 
         caravana->setCargaAtual(0); // Zera a carga da caravana
     }
+    else if (comando.rfind("auto", 0) == 0) { // Exemplo: auto 1
+        int id = comando[5] - '0';
+        if (id < 0 || id >= caravanas.size()) {
+            std::cout << "Caravana inválida.\n";
+            return;
+        }
+
+        caravanas[id]->setAutonomo(true);
+        std::cout << "Caravana " << id << " está agora em modo autónomo.\n";
+    }
+    else if (comando.rfind("stop", 0) == 0) { // Exemplo: stop 1
+        int id = comando[5] - '0';
+        if (id < 0 || id >= caravanas.size()) {
+            std::cout << "Caravana inválida.\n";
+            return;
+        }
+
+        caravanas[id]->setAutonomo(false);
+        std::cout << "Caravana " << id << " está agora em modo manual.\n";
+    }
+    else if (comando.rfind("areia", 0) == 0) { // Exemplo: areia 5 5 3
+        int l, c, r;
+        try {
+            l = std::stoi(comando.substr(6, comando.find(" ", 6)));
+            c = std::stoi(comando.substr(comando.find(" ", 6) + 1, comando.find(" ", comando.find(" ", 6) + 1)));
+            r = std::stoi(comando.substr(comando.find_last_of(" ") + 1));
+        } catch (...) {
+            std::cout << "Comando inválido. Uso correto: areia <l> <c> <r>\n";
+            return;
+        }
+
+        // Afeta caravanas dentro do raio
+        for (auto* caravana : caravanas) {
+            int dx = caravana->getPosX() - l;
+            int dy = caravana->getPosY() - c;
+            if (dx * dx + dy * dy <= r * r) { // Dentro do raio
+                caravana->setTripulantes(caravana->getTripulantes() - 5); // Perde 5 tripulantes
+                caravana->consumirAgua(); // Consome água extra
+                std::cout << "Caravana " << caravana->getSymbol() << " foi afetada pela tempestade de areia!\n";
+            }
+        }
+    }
+    else if (comando.rfind("moedas", 0) == 0) { // Exemplo: moedas 200
+        int valor;
+        try {
+            valor = std::stoi(comando.substr(7));
+        } catch (...) {
+            std::cout << "Comando inválido. Uso correto: moedas <N>\n";
+            return;
+        }
+
+        moedasJogador += valor;
+        std::cout << "Moedas ajustadas. Total atual: " << moedasJogador << "\n";
+    }
+    else if (comando.rfind("tripul", 0) == 0) { // Exemplo: tripul 1 10
+        int id, tripulantes;
+        try {
+            id = std::stoi(comando.substr(7, comando.find(" ", 7)));
+            tripulantes = std::stoi(comando.substr(comando.find(" ", 7) + 1));
+        } catch (...) {
+            std::cout << "Comando inválido. Uso correto: tripul <N> <T>\n";
+            return;
+        }
+
+        if (id < 0 || id >= caravanas.size()) {
+            std::cout << "Caravana inválida.\n";
+            return;
+        }
+
+        Caravana* caravana = caravanas[id];
+
+        if (caravana->getTripulantes() + tripulantes > caravana->getMaxTripulantes()) {
+            std::cout << "Não é possível adicionar tantos tripulantes. Capacidade máxima excedida.\n";
+            return;
+        }
+
+        caravana->setTripulantes(caravana->getTripulantes() + tripulantes);
+        std::cout << "Tripulantes ajustados. Total atual: " << caravana->getTripulantes() << "\n";
+    }
+
 }
 
 
