@@ -45,7 +45,7 @@ void Caravana::mover(char direcao) {
     std::cout << tipo << " moveu-se para (" << posX << ", " << posY << ").\n";
 }
 
-void Caravana::consumirAgua() {
+void Caravana::consumirAgua(int i) {
     if (tripulantes > 0) {
         int consumo = (tripulantes > (capacidadeAgua / 4)) ? 2 : 1;
         aguaAtual = std::max(aguaAtual - consumo, 0);
@@ -93,7 +93,22 @@ bool Caravana::moveCaravana(Caravana* caravana, char direcao) {
         buffer.setChar(x, y, '.'); // Limpa posição atual
         if(tipo == "Bárbara"){
             buffer.setChar(novoX, novoY, '!'); // Atualiza posição com as novas coordenadas
-        } else{
+        } else if(tipo == "Comércio"){
+            if(tripulantes > 10){
+                this->consumirAgua(2);
+            } else if ( tripulantes > 0){
+                this->consumirAgua(1);
+            }
+            buffer.setChar(novoX, novoY, '0' + nCaravana); // Atualiza posição com as novas coordenadas
+        } else if(tipo == "Militar"){
+            if(tripulantes > 20){
+                this->consumirAgua(3);
+            } else {
+                this->consumirAgua(1);
+            }
+            buffer.setChar(novoX, novoY, '0' + nCaravana); // Atualiza posição com as novas coordenadas
+        }
+        else{
             buffer.setChar(novoX, novoY, '0' + nCaravana); // Atualiza posição com as novas coordenadas
         }
 
