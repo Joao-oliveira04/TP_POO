@@ -58,6 +58,9 @@ public:
     Caravana* getCaravana(int nCaravana);// retorna a caravana
     bool moveCaravana(Caravana* caravana, char direcao);
     void combate(Caravana* outraCaravana);
+    int getCargaAtual() {return cargaAtual;}
+    void setCargaAtual(int novaCarga) {cargaAtual = novaCarga;}
+    int getCapacidadeCarga() const { return capacidadeCarga; }
 };
 
 // Classe Derivada: Barbara

@@ -62,3 +62,10 @@ bool Cidade::isAccessible() const {
     return (buffer.getChar(posX - 1, posY) == '.' || buffer.getChar(posX + 1, posY) == '.' ||
             buffer.getChar(posX, posY - 1) == '.' || buffer.getChar(posX, posY + 1) == '.');
 }
+
+void Cidade::listarCaravanas() const {
+    std::cout << "Caravanas na cidade " << nome << ":\n";
+    for (const auto& caravana : caravanas) {
+        std::cout << " - Caravana " << caravana->getSymbol() << "\n";
+    }
+}

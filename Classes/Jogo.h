@@ -23,15 +23,19 @@ private:
     bool jogoAtivo = true;  // estado do jogo
 
     // metodos auxiliares
-    void processarComando(const std::string& comando);
+
     void verificarCondicoesDeTermino();
     void mostrarPontuacaoFinal();
+    void processarComando(const std::string& comando);
+
 
 public:
-    jogo(int linhas, int colunas, int moedasIniciais);
+    Jogo(int linhas, int colunas, int moedasIniciais);
     ~Jogo();
 
     void iniciar(); // iniciar a simulacao
+    std::vector<Cidade*> getCidades() const { return deserto.getCidades(); }
+
 };
 
 
