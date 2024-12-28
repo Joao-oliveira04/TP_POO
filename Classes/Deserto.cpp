@@ -133,3 +133,7 @@ void Deserto::verificaItens(Caravana* caravana) {
         }
     }
 }
+
+vector<Cidade*> Deserto::getCidades() {
+    return cidades;
+}

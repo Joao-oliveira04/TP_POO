@@ -34,7 +34,7 @@ public:
     ~Jogo();
 
     void iniciar(); // iniciar a simulacao
-    std::vector<Cidade*> getCidades() const { return deserto.getCidades(); }
+    std::vector<Cidade*> getCidades(Deserto deserto) const { return deserto.getCidades(); }
 
 };
 

@@ -30,7 +30,7 @@ public:
 
     void adicionaCidade(Cidade* cidade);
     void listarCidades() const;
-    void getCidades();  // ciade
+    vector<Cidade*> getCidades();  // cidade
 };
 
 
