@@ -75,6 +75,15 @@ void Deserto::adicionaCaravana(Caravana* caravana) {
     caravanas.push_back(caravana);
 }
 
+Deserto Deserto::getInstancia(Buffer& buf) {
+    static Deserto instancia(buf);
+    return instancia;
+}
+
+vector<Caravana*> Deserto::getCaravanas() const {
+    return caravanas;
+}
+
 // Gera os tais itens
 void Deserto::geraItens(int numItens)
 {

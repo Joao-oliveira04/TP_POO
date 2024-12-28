@@ -19,12 +19,15 @@ private:
 
 public:
     Deserto(Buffer& buf);
+    static Deserto getInstancia(Buffer& buf);
     void geraDeserto();
     void geraMontanha();    // Gera montanhas no tabuleiro
     void geraCidades(int numCidades); // Gera cidades no tabuleiro
     void geraItens(int numItens); // Novo mtodo para gerar itens
     void verificaItens(Caravana* caravana); // Aplicar o efeito dos itens
     void adicionaCaravana(Caravana* caravana); // Adiciona caravana ao deserto
+    vector<Caravana*> getCaravanas() const; // Retorna as caravanas
+
     void adicionaCidade(Cidade* cidade);
     void listarCidades() const;
 };

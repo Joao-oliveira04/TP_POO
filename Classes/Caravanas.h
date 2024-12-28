@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 #include "Buffer.h"
+#include "Itens.h"
 #include <cmath> // Para cálculos matemáticos (distância)
 // Classe Base: Caravana
 class Caravana {
@@ -38,7 +39,7 @@ public:
     virtual ~Caravana();
 
     virtual void mover(char direcao);
-    virtual void comportamentoAutonomo(); // Metodo abstrato
+    //virtual void comportamentoAutonomo(); // Metodo abstrato
     void consumirAgua();
     bool semAgua() const;
     bool semTripulantes() const;
@@ -47,6 +48,7 @@ public:
     int getPosX() const;      // Retorna a posição X
     int getPosY() const;      // Retorna a posição Y
     void setPos(int x, int y);// Atualiza a posição
+    Caravana* getCaravanaClose(Buffer &buf);   // retorna a caravana nas casas adjacentes
     void destruir();   // destroi a caravana
     int getTripulantes() {return tripulantes;}// tripulantes das caravanas
     void setTripulantes(int i); // tripulantes
@@ -69,7 +71,7 @@ public:
 class Comercio : public Caravana {
 public:
     Comercio(int x, int y, Buffer& buffer);
-    void comportamentoAutonomo() override;
+    void comportamentoAutonomo(std::vector<Caravana*>& caravanasJogador, std::vector<Itens*>& itens, Buffer& buffer);
     void moverSemTripulantes();
 };
 
@@ -77,15 +79,18 @@ public:
 class Militar : public Caravana {
 public:
     Militar(int x, int y, Buffer& buffer);
-    void comportamentoAutonomo() override;
+    void comportamentoAutonomo(std::vector<Barbara*>& barbaras, Buffer& buffer);
     void moverSemTripulantes();
 };
 
-// Classe Derivada: Infetada
+// Classe Derivada: Infetada (caravana secreta)
+// Esta caravana se move aleatoriamente e pode infectar outras caravanas
+// caravanas infectadas perdem 20% dos tripulantes
 class Infetada : public Caravana {
 public:
     Infetada(int x, int y, Buffer& buffer);
-    void comportamentoAutonomo() override;
+    void comportamentoAutonomo(Buffer& buffer);
+    void infectar(Caravana* caravana);
 };
 
 
