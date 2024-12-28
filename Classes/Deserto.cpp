@@ -3,6 +3,7 @@
 //
 
 #include "Deserto.h"
+#include "Cidades.h"
 // Construtor que recebe uma referência ao buffer
 Deserto::Deserto(Buffer& buf) : buffer(buf) {}
 

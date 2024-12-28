@@ -27,12 +27,34 @@ Caravana::Caravana(std::string t, int trip, int capAgua, int capCarga, int movim
 
 Caravana::~Caravana() {}
 
+void Caravana::comportamentoAutonomo() {
+    // This function should be overridden in derived classes
+}
+
 void Caravana::encontrarPosicaoValida() {
     do {
         posX = rand() % buffer.getNumLinhas();
         posY = rand() % buffer.getNumColunas();
     } while (buffer.getChar(posX, posY) != '.');
 }
+
+
+// Define the getPosX function
+int Caravana::getPosX() const {
+    return posX;
+}
+
+// Define the getPosY function
+int Caravana::getPosY() const {
+    return posY;
+}
+
+// Define the setPos function
+void Caravana::setPos(int x, int y) {
+    posX = x;
+    posY = y;
+}
+
 
 void Caravana::mover(char direcao) {
     direcaoAtual = direcao;

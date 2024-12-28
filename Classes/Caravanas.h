@@ -41,7 +41,7 @@ public:
     virtual ~Caravana();
 
     virtual void mover(char direcao);
-    //virtual void comportamentoAutonomo(); // Metodo abstrato
+    virtual void comportamentoAutonomo(); // Metodo abstrato
     void consumirAgua(int i);
     bool semAgua() const;
     bool semTripulantes() const;

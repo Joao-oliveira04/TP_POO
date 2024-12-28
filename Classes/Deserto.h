@@ -7,9 +7,9 @@
 #include "Buffer.h"
 #include "Itens.h"
 #include "Caravanas.h"
-#include "Cidades.h"
-#include <vector>
 
+#include <vector>
+class Cidade;
 class Deserto {
 private:
     Buffer& buffer; // Referência ao buffer onde será desenhado o deserto

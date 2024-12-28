@@ -5,7 +5,8 @@
 #include "Jogo.h"
 #include <iostream>
 #include <cstdlib>
-
+#include "Caravanas.h"
+#include "Cidades.h"
 Jogo::Jogo(int linhas, int colunas, int moedasIniciais)
     : buffer(linhas, colunas), deserto(buffer), moedasJogador(moedasIniciais),
       instantesDecorridos(0), combatesVencidos(0), jogoAtivo(true) {
@@ -58,7 +59,7 @@ void Jogo::iniciar() {
 
     mostrarPontuacaoFinal();
 }
-
+/*
 void Jogo::processarComando(const std::string& comando) {
     if (comando == "moedas") {
         std::cout << "Você possui " << moedasJogador << " moedas.\n";
@@ -75,7 +76,7 @@ void Jogo::processarComando(const std::string& comando) {
         }
     }
     // Adiciona outros comandos conforme necessário
-}
+}*/
 
 void Jogo::verificarCondicoesDeTermino() {
     bool temCaravanasAtivas = false;
@@ -116,7 +117,7 @@ void Jogo::processarComando(const std::string& comando) {
         for (int i = 0; i < turnos; ++i) {
             for (auto* caravana : caravanas) {
                 if (!caravana->semTripulantes()) {
-                    caravana->consumirAgua();
+                    caravana->consumirAgua(0);
                 }
             }
         }
@@ -157,8 +158,8 @@ void Jogo::processarComando(const std::string& comando) {
         }
 
         Caravana* novaCaravana = (tipoCaravana == 'C')
-                                 ? new Comercio(cidadeAlvo->getPosX(), cidadeAlvo->getPosY(), buffer)
-                                 : new Militar(cidadeAlvo->getPosX(), cidadeAlvo->getPosY(), buffer);
+                                 ? static_cast<Caravana*>(new Comercio(cidadeAlvo->getPosX(), cidadeAlvo->getPosY(), buffer))
+                                 : static_cast<Caravana*>(new Militar(cidadeAlvo->getPosX(), cidadeAlvo->getPosY(), buffer));
 
         if (novaCaravana) {
             caravanas.push_back(novaCaravana);
@@ -339,7 +340,7 @@ void Jogo::processarComando(const std::string& comando) {
             int dy = caravana->getPosY() - c;
             if (dx * dx + dy * dy <= r * r) { // Dentro do raio
                 caravana->setTripulantes(caravana->getTripulantes() - 5); // Perde 5 tripulantes
-                caravana->consumirAgua(); // Consome água extra
+                caravana->consumirAgua(2); // Consome água extra
                 std::cout << "Caravana " << caravana->getSymbol() << " foi afetada pela tempestade de areia!\n";
             }
         }
