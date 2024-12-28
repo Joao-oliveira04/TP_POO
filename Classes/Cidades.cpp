@@ -92,9 +92,10 @@ void Cidade::sellMercadoria(Caravana *caravana, int i) {
 }
 void Cidade::buyCaravana(Caravana *caravana) {
     Deserto deserto = Deserto::getInstancia(buffer);
-    if(caravana->getMoedasJogador() >= 500){
-        caravana->setMoedasJogador(caravana->getMoedasJogador() - 500);
-        caravanas_buy.push_back(caravana);
+    if(caravana->getMoedasJogador() >= 100){
+        caravana->setMoedasJogador(caravana->getMoedasJogador() - 100);
+        caravanas.push_back(caravana);
+        caravanas_buy.erase(std::remove(caravanas_buy.begin(), caravanas_buy.end(), caravana), caravanas_buy.end());
         deserto.adicionaCaravana(caravana);
         std::cout << "Caravana " << caravana->getSymbol() << " foi comprada!\n";
     } else{
@@ -103,5 +104,5 @@ void Cidade::buyCaravana(Caravana *caravana) {
 }
 
 void Cidade::addCaravana(Caravana *caravana) {
-    caravanas_buy.push_back(caravana);
+    caravanas.push_back(caravana);
 }
