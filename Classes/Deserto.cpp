@@ -5,7 +5,12 @@
 #include "Deserto.h"
 #include "Cidades.h"
 // Construtor que recebe uma referência ao buffer
-Deserto::Deserto(Buffer& buf) : buffer(buf) {}
+Deserto::Deserto(Buffer& buf) : buffer(buf) {
+}
+
+std::vector<Cidade*> Deserto::cidades; // Definição do vetor estático
+
+std::vector<Itens*> Deserto::itens; // Definição do vetor estático
 
 void Deserto::geraDeserto() {
     for (int i = 0; i < buffer.getNumLinhas(); ++i) {
@@ -42,15 +47,6 @@ void Deserto::geraMontanha() {
     }
 }
 
-void Deserto::geraBarbara() {
-    int x, y;
-    do {
-        x = rand() % buffer.getNumLinhas();
-        y = rand() % buffer.getNumColunas();
-    } while (buffer.getChar(x, y) != '.');
-    Barbaras.push_back(new Barbara(x, y, buffer));
-}
-
 // Gera cidades no tabuleiro
 void Deserto::geraCidades(int numCidades) {
     for (int i = 0; i < numCidades; ++i) {
@@ -67,33 +63,27 @@ void Deserto::geraCidades(int numCidades) {
         }
         std::string nome(1, 'A' + i); // Nome único da cidade
         Cidade* cidade = new Cidade(nome, x, y, buffer);
-        cidade->addCaravana(new Comercio(x, y, buffer));
-        cidade->addCaravana(new Militar(x, y, buffer));
         cidades.push_back(cidade);
+        for (const auto& cidade : cidades) {
+        }
     }
 }
 
-void Deserto::adicionaCidade(Cidade* cidade) {
-    cidades.push_back(cidade);
-}
-
-void Deserto::listarCidades() const {
+Cidade* Deserto::getCidade(int x, int y) const {
     for (const auto& cidade : cidades) {
-        std::cout << "Cidade " << cidade->getNome() << " em (" << cidade->getPosX() << ", " << cidade->getPosY() << ")\n";
+        std::cout << "Verificando cidade em (" << cidade->getPosX() << ", " << cidade->getPosY() << ")\n";
+        if (cidade->getPosX() == x && cidade->getPosY() == y) {
+            std::cout << "Cidade encontrada em (" << x << ", " << y << ")\n";
+            return cidade;
+        }
     }
+    std::cout << "Nenhuma cidade encontrada em (" << x << ", " << y << ")\n";
+    return nullptr;
 }
 
-void Deserto::adicionaCaravana(Caravana* caravana) {
-    caravanas.push_back(caravana);
-}
-
-Deserto Deserto::getInstancia(Buffer& buf) {
+Deserto& Deserto::getInstancia(Buffer& buf) {
     static Deserto instancia(buf);
     return instancia;
-}
-
-vector<Caravana*> Deserto::getCaravanas() const {
-    return caravanas;
 }
 
 // Gera os tais itens

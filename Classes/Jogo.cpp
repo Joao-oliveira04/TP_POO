@@ -13,20 +13,14 @@ Jogo::Jogo(int linhas, int colunas, int moedasIniciais)
     buffer.limpaBuffer();
     deserto.geraDeserto();
     deserto.geraMontanha();
-    deserto.geraCidades(5); // Exemplo: 5 cidades
+    deserto.geraCidades(5);
 
     // Adiciona caravanas do jogador
-    caravanas.push_back(new Comercio(3, 3,buffer));
-    caravanas.push_back(new Militar(5, 5,buffer));
-
-    // Adiciona uma caravana bárbara
-    caravanas.push_back(new Barbara(7, 7,buffer));
-
+    caravanas.push_back(new Comercio(0, 0,buffer));
+    caravanas.push_back(new Militar(0, 0,buffer));
     // Posiciona caravanas no buffer
     for (auto* caravana : caravanas)
-        caravana->moveCaravana(caravana, ' '); // Posiciona no mapa inicial
-    for (auto* barbara : barbaras)
-        barbara->moveCaravana(barbara, ' ');
+        caravana->encontrarPosicaoValida();
 }
 
 Jogo::~Jogo() {
@@ -39,14 +33,35 @@ Jogo::~Jogo() {
 
 void Jogo::iniciar() {
     while (jogoAtivo) {
+        if(instantesDecorridos % 40 == 0) {
+            deserto.geraItens(1);
+            // Adiciona uma caravana bárbara
+            barbaras.push_back(new Barbara(0, 0, buffer));
+            nBarbaras++;
+            barbaras[nBarbaras - 1]->encontrarPosicaoValida();
+        }
+        // Movimento autônomo das caravanas bárbaras
+        for (auto* barbara : barbaras) {
+            barbara->comportamentoAutonomo(caravanas, buffer);
+        }
+
         // Mostra o estado do jogo
         buffer.mostraBuffer();
         std::cout << "Turno " << ++instantesDecorridos << ":\n";
-
+        for (auto* barbara : barbaras) {
+            Caravana* caravanaProxima = barbara->getCaravanaClose(caravanas);
+            if (caravanaProxima != nullptr) {
+                std::cout << "Combate entre uma caravana Bárbara e a caravana "<<caravanaProxima->getSymbol()<<"!\n";
+                barbara->combate(caravanaProxima);
+            }
+            else{
+                barbara->comportamentoAutonomo(caravanas, buffer);
+            }
+        }
         // Processa o comando do jogador
         std::string comando;
         std::cout << "Insira um comando: ";
-        std::cin >> comando;
+        std::getline(std::cin, comando); // Lê a linha inteira de entrada
 
         if (comando == "terminar") {
             jogoAtivo = false;
@@ -59,24 +74,6 @@ void Jogo::iniciar() {
 
     mostrarPontuacaoFinal();
 }
-/*
-void Jogo::processarComando(const std::string& comando) {
-    if (comando == "moedas") {
-        std::cout << "Você possui " << moedasJogador << " moedas.\n";
-    } else if (comando.rfind("move", 0) == 0) { // Exemplo: "move 1 N"
-        int id = comando[5] - '0';             // ID da caravana
-        char direcao = comando[7];             // Direção
-        if (id >= 0 && id < caravanas.size()) {
-            caravanas[id]->moveCaravana(caravanas[id], direcao);
-        }
-        for (auto* caravana : caravanas) {
-            if (caravana->isAutonomo() && !caravana->semTripulantes()) {
-                caravana->comportamentoAutonomo(); // Já implementado para cada tipo de caravana
-            }
-        }
-    }
-    // Adiciona outros comandos conforme necessário
-}*/
 
 void Jogo::verificarCondicoesDeTermino() {
     bool temCaravanasAtivas = false;
@@ -115,9 +112,21 @@ void Jogo::processarComando(const std::string& comando) {
         }
 
         for (int i = 0; i < turnos; ++i) {
+            for (auto* barbara : barbaras) {
+                Caravana *a = barbara->getCaravanaClose(caravanas);
+                if (a != nullptr) {
+                    std::cout << "Combate entre Bárbara e outra caravana!\n";
+                    barbara->combate(a);
+                }
+                else{
+                    barbara->comportamentoAutonomo(caravanas, buffer);
+                }
+            }
             for (auto* caravana : caravanas) {
                 if (!caravana->semTripulantes()) {
-                    caravana->consumirAgua(0);
+                    if(caravana->getTipo() == "Militar"){
+                        caravana->consumirAgua(1);
+                    }
                 }
             }
         }
@@ -145,13 +154,17 @@ void Jogo::processarComando(const std::string& comando) {
             std::cout << "Cidade não encontrada.\n";
             return;
         }
+        if(!cidadeAlvo->getnCaravanas()){
+            std::cout << "Nenhuma caravana na cidade\n";
+            return;
+        }
 
         if (tipoCaravana != 'C' && tipoCaravana != 'M') {
             std::cout << "Tipo de caravana inválido. Use 'C' para Comércio ou 'M' para Militar.\n";
             return;
         }
 
-        int custo = (tipoCaravana == 'C') ? 200 : 300;
+        int custo = (tipoCaravana == 'C') ? 100 : 200;
         if (moedasJogador < custo) {
             std::cout << "Você não tem moedas suficientes para comprar esta caravana.\n";
             return;
@@ -160,8 +173,8 @@ void Jogo::processarComando(const std::string& comando) {
         Caravana* novaCaravana = (tipoCaravana == 'C')
                                  ? static_cast<Caravana*>(new Comercio(cidadeAlvo->getPosX(), cidadeAlvo->getPosY(), buffer))
                                  : static_cast<Caravana*>(new Militar(cidadeAlvo->getPosX(), cidadeAlvo->getPosY(), buffer));
-
         if (novaCaravana) {
+            cidadeAlvo->entraCaravana(novaCaravana);
             caravanas.push_back(novaCaravana);
             moedasJogador -= custo;
             std::cout << "Caravana comprada com sucesso! Moedas restantes: " << moedasJogador << "\n";
@@ -175,16 +188,22 @@ void Jogo::processarComando(const std::string& comando) {
 
         int id = comando[5] - '0';
         char direcao = comando[7];
-
+        id--;
         if (id >= 0 && id < caravanas.size()) {
+            if (caravanas[id]->isAutonomo()) {
+                std::cout<<"Caravana é autônoma.\n";
+                return;
+            }
             if (direcao != 'N' && direcao != 'S' && direcao != 'E' && direcao != 'O') {
                 std::cout << "Direção inválida. Use N, S, E ou O.\n";
                 return;
             }
 
-            bool sucesso = caravanas[id]->moveCaravana(caravanas[id], direcao);
+            bool sucesso = caravanas[id]->moveCaravana(caravanas[id], direcao,buffer);
             if (!sucesso) {
                 std::cout << "Movimento inválido.\n";
+            } else {
+                std::cout << "Caravana " << caravanas[id]->getTipo() << " moveu-se para " << direcao << ".\n";
             }
         } else {
             std::cout << "Caravana inválida.\n";
@@ -192,7 +211,7 @@ void Jogo::processarComando(const std::string& comando) {
     }
     else if (comando.rfind("cidade", 0) == 0) { // Exemplo: cidade A
         if (comando.size() < 8) {
-            std::cout << "Comando inválido. Uso correto: cidade <C>\n";
+            std::cout << "Comando inválido. Uso correto: cidade <C>"<<endl;
             return;
         }
 
@@ -208,29 +227,88 @@ void Jogo::processarComando(const std::string& comando) {
         }
 
         if (!cidadeAlvo) {
-            std::cout << "Cidade " << nomeCidade << " não encontrada.\n";
+            std::cout << "Cidade " << nomeCidade << " não encontrada."<< endl;
             return;
         }
 
         // Listar caravanas na cidade
-        std::cout << "Informações da cidade " << cidadeAlvo->getNome() << ":\n";
+        std::cout << "Informações da cidade " << cidadeAlvo->getNome() << ":"<< endl;
         cidadeAlvo->listarCaravanas();
     }
-    else if (comando.rfind("compra", 0) == 0) { // Exemplo: compra 1 10
-        if (comando.size() < 10) {
-            std::cout << "Comando inválido. Uso correto: compra <N> <M>\n";
+    else if (comando.rfind("comprat", 0) == 0) {
+        if (comando.size() < 9) {
+            std::cout << "Comando inválido. Uso correto: comprat <ID> <N>"<<endl;
             return;
         }
 
-        int id = comando[7] - '0';  // ID da caravana
-        int quantidade = std::stoi(comando.substr(9));  // Quantidade de mercadoria
+        int id = comando[7] - '0'; // ID da caravana
+        id--;
+        int tripulantes = std::stoi(comando.substr(9)); // Quantidade de tripulantes
 
         if (id < 0 || id >= caravanas.size()) {
-            std::cout << "Caravana inválida.\n";
+            std::cout << "Caravana inválida."<<endl;
             return;
         }
 
         Caravana* caravana = caravanas[id];
+        if (caravana->getTipo() != "Comercio") {
+            std::cout << "Caravana não é do tipo Comercio."<<endl;
+            return;
+        }
+
+        // Verifica se a caravana está numa cidade
+        bool naCidade = false;
+        for (auto* c : deserto.getCidades()) {
+            if (c->getPosX() == caravana->getPosX() && c->getPosY() == caravana->getPosY()) {
+                naCidade = true;
+                break;
+            }
+        }
+
+        if (!naCidade) {
+            std::cout << "A caravana não está numa cidade para comprar tripulantes."<<endl;
+            return;
+        }
+
+        // Simula o custo e verifica capacidade
+        int custo = tripulantes * 1; // Exemplo: 1 moeda por tripulante
+        if (moedasJogador < custo) {
+            std::cout << "Moedas insuficientes. Precisa de " << custo << " moedas."<<endl;
+            return;
+        }
+
+        if (caravana->getTripulantes() + tripulantes > caravana->getMaxTripulantes()) {
+            std::cout << "Capacidade de tripulantes excedida."<<endl;
+            return;
+        }
+
+        // Realiza a compra
+        caravana->setTripulantes(caravana->getTripulantes() + tripulantes);
+        moedasJogador -= custo;
+
+        std::cout << "Compra realizada com sucesso. Tripulantes atuais: " << caravana->getTripulantes()
+                  << ". Moedas restantes: ";
+    }
+    else if (comando.rfind("compra", 0) == 0) { // Exemplo: compra 1 10
+        if (comando.size() < 10) {
+            std::cout << "Comando inválido. Uso correto: compra <id> <M>"<<endl;
+            return;
+        }
+
+        int id = comando[7] - '0';  // ID da caravana
+        id--;
+        int quantidade = std::stoi(comando.substr(9));  // Quantidade de mercadoria
+
+        if (id < 0 || id >= caravanas.size()) {
+            std::cout << "Caravana inválida."<<endl;
+            return;
+        }
+
+        Caravana* caravana = caravanas[id];
+        if(caravana->getTipo() != "Comercio"){
+            std::cout << "Caravana não é do tipo Comercio."<<endl;
+            return;
+        }
 
         // Verifica se a caravana está numa cidade
         bool naCidade = false;
@@ -247,7 +325,7 @@ void Jogo::processarComando(const std::string& comando) {
         }
 
         // Simula o custo e verifica capacidade
-        int custo = quantidade * 10; // Exemplo: 10 moedas por unidade
+        int custo = quantidade; // Exemplo: 1 moedas por unidade
         if (moedasJogador < custo) {
             std::cout << "Moedas insuficientes. Precisa de " << custo << " moedas.\n";
             return;
@@ -266,13 +344,14 @@ void Jogo::processarComando(const std::string& comando) {
                   << ". Moedas restantes: " << moedasJogador << "\n";
     }
     else if (comando.rfind("vende", 0) == 0) { // Exemplo: vende 1
-        if (comando.size() < 7) {
-            std::cout << "Comando inválido. Uso correto: vende <N>\n";
+        if (comando.size() < 10) {
+            std::cout << "Comando inválido. Uso correto: vende <id> <N>\n";
             return;
         }
 
         int id = comando[6] - '0'; // ID da caravana
-
+        id--;
+        int quantidade = std::stoi(comando.substr(8)); // Quantidade de mercadoria
         if (id < 0 || id >= caravanas.size()) {
             std::cout << "Caravana inválida.\n";
             return;
@@ -280,6 +359,10 @@ void Jogo::processarComando(const std::string& comando) {
 
         Caravana* caravana = caravanas[id];
 
+        if(caravana->getTipo() != "Comercio"){
+            std::cout << "Caravana não é do tipo Comercio."<<endl;
+            return;
+        }
         // Verifica se a caravana está numa cidade
         bool naCidade = false;
         for (auto* c : deserto.getCidades()) {
@@ -295,16 +378,23 @@ void Jogo::processarComando(const std::string& comando) {
         }
 
         // Calcula o total de moedas recebidas
-        int totalVendido = caravana->getCargaAtual() * 15; // Exemplo: 15 moedas por unidade
-        moedasJogador += totalVendido;
+        int totalVendido = quantidade * 2; // Exemplo: 15 moedas por unidade
+        if (quantidade > caravana->getCargaAtual()) {
+            std::cout << "Quantidade de mercadoria insuficiente.\n";
+            return;
+        }
+        else{
+            moedasJogador += totalVendido;
 
-        std::cout << "Venda realizada com sucesso. Lucro: " << totalVendido
-                  << ". Moedas totais: " << moedasJogador << "\n";
+            std::cout << "Venda realizada com sucesso. Lucro: " << totalVendido
+                      << ". Moedas totais: " << moedasJogador << "\n";
 
-        caravana->setCargaAtual(0); // Zera a carga da caravana
+            caravana->setCargaAtual(caravana->getCargaAtual()-totalVendido); // Zera a carga da caravana
+        }
     }
     else if (comando.rfind("auto", 0) == 0) { // Exemplo: auto 1
         int id = comando[5] - '0';
+        id--;
         if (id < 0 || id >= caravanas.size()) {
             std::cout << "Caravana inválida.\n";
             return;
@@ -315,6 +405,7 @@ void Jogo::processarComando(const std::string& comando) {
     }
     else if (comando.rfind("stop", 0) == 0) { // Exemplo: stop 1
         int id = comando[5] - '0';
+        id--;
         if (id < 0 || id >= caravanas.size()) {
             std::cout << "Caravana inválida.\n";
             return;
@@ -322,28 +413,6 @@ void Jogo::processarComando(const std::string& comando) {
 
         caravanas[id]->setAutonomo(false);
         std::cout << "Caravana " << id << " está agora em modo manual.\n";
-    }
-    else if (comando.rfind("areia", 0) == 0) { // Exemplo: areia 5 5 3
-        int l, c, r;
-        try {
-            l = std::stoi(comando.substr(6, comando.find(" ", 6)));
-            c = std::stoi(comando.substr(comando.find(" ", 6) + 1, comando.find(" ", comando.find(" ", 6) + 1)));
-            r = std::stoi(comando.substr(comando.find_last_of(" ") + 1));
-        } catch (...) {
-            std::cout << "Comando inválido. Uso correto: areia <l> <c> <r>\n";
-            return;
-        }
-
-        // Afeta caravanas dentro do raio
-        for (auto* caravana : caravanas) {
-            int dx = caravana->getPosX() - l;
-            int dy = caravana->getPosY() - c;
-            if (dx * dx + dy * dy <= r * r) { // Dentro do raio
-                caravana->setTripulantes(caravana->getTripulantes() - 5); // Perde 5 tripulantes
-                caravana->consumirAgua(2); // Consome água extra
-                std::cout << "Caravana " << caravana->getSymbol() << " foi afetada pela tempestade de areia!\n";
-            }
-        }
     }
     else if (comando.rfind("moedas", 0) == 0) { // Exemplo: moedas 200
         int valor;

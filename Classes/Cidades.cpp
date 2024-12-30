@@ -29,6 +29,7 @@ int Cidade::getPosY() const {
 void Cidade::entraCaravana(Caravana* caravana) {
     caravanas.push_back(caravana);
     buffer.setChar(caravana->getPosX(), caravana->getPosY(), '.'); // Remove caravana do mapa
+    nCaravanas++;
     std::cout << "Caravana entrou na cidade " << nome << "\n";
 }
 
@@ -36,8 +37,13 @@ void Cidade::saiCaravana(Caravana* caravana) {
     auto it = std::find(caravanas.begin(), caravanas.end(), caravana);
     if (it != caravanas.end()) {
         caravanas.erase(it);
+        nCaravanas--;
         std::cout << "Caravana saiu da cidade " << nome << "\n";
     }
+}
+
+int Cidade::getnCaravanas() const {
+    return nCaravanas;
 }
 
 void Cidade::listarCaravanas() const {
@@ -47,62 +53,10 @@ void Cidade::listarCaravanas() const {
     }
 }
 
-void Cidade::buyTripulantes(Caravana* caravana,int i){
-    if(caravana->getMoedasJogador() >= i){
-        if(caravana->getTripulantes() + i <= caravana->getMaxTripulantes()){
-            caravana->setTripulantes(caravana->getTripulantes() + i);
-            caravana->setMoedasJogador(caravana->getMoedasJogador() - i);
-            std::cout << "Caravana " << caravana->getSymbol() << " comprou " << i << " tripulantes!\n";
-        } else{
-            std::cout << "Caravana " << caravana->getSymbol() << " não pode comprar mais tripulantes!\n";
-        }
-    } else{
-        std::cout << "Caravana " << caravana->getSymbol() << " não tem moedas suficientes para comprar tripulantes!\n";
-    }
-}
-
 bool Cidade::isAccessible() const {
     // Verifica se pelo menos um lado da cidade é acessível (deserto)
     return (buffer.getChar(posX - 1, posY) == '.' || buffer.getChar(posX + 1, posY) == '.' ||
             buffer.getChar(posX, posY - 1) == '.' || buffer.getChar(posX, posY + 1) == '.');
 }
 
-void Cidade::buyMercadoria(Caravana* caravana,int i){
-    if(caravana->getMoedasJogador() >= i){
-        if(caravana->getCargaAtual() + i <= caravana->getCapacidadeCarga()) {
-            caravana->setCargaAtual(caravana->getCargaAtual() + i);
-            caravana->setMoedasJogador(caravana->getMoedasJogador() - i);
-            std::cout << "Caravana " << caravana->getSymbol() << " comprou " << i << " toneldas de mercadorias!\n";
-        } else{
-            std::cout << "Caravana " << caravana->getSymbol() << " não tem capacidade para essas mercadorias!\n";
-        }
-    } else{
-        std::cout << "Caravana " << caravana->getSymbol() << " não tem moedas suficientes para comprar mercadorias!\n";
-    }
-}
 
-void Cidade::sellMercadoria(Caravana *caravana, int i) {
-    if(caravana->getCargaAtual() >= i*2){
-        caravana->setCargaAtual(caravana->getCargaAtual() - i);
-        caravana->setMoedasJogador(caravana->getMoedasJogador() + i*2);
-        std::cout << "Caravana " << caravana->getSymbol() << " vendeu " << i << " toneladas de mercadorias!\n";
-    } else{
-        std::cout << "Caravana " << caravana->getSymbol() << " não tem mercadorias suficientes para vender!\n";
-    }
-}
-void Cidade::buyCaravana(Caravana *caravana) {
-    Deserto deserto = Deserto::getInstancia(buffer);
-    if(caravana->getMoedasJogador() >= 100){
-        caravana->setMoedasJogador(caravana->getMoedasJogador() - 100);
-        caravanas.push_back(caravana);
-        caravanas_buy.erase(std::remove(caravanas_buy.begin(), caravanas_buy.end(), caravana), caravanas_buy.end());
-        deserto.adicionaCaravana(caravana);
-        std::cout << "Caravana " << caravana->getSymbol() << " foi comprada!\n";
-    } else{
-        std::cout << "Caravana " << caravana->getSymbol() << " não tem moedas suficientes para ser comprada!\n";
-    }
-}
-
-void Cidade::addCaravana(Caravana *caravana) {
-    caravanas.push_back(caravana);
-}

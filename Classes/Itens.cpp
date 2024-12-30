@@ -1,5 +1,6 @@
 #include "Itens.h"
 #include "Caravanas.h"
+#include "Jogo.h"
 
 void CaixaDePandora::aplicarEfeito(Caravana* caravana) {
     if (caravana) {

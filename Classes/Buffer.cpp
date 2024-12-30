@@ -51,72 +51,16 @@ Buffer::~Buffer() {
     delete[] buffer;
 }
 
-//posiciona o cursor
-void Buffer::posicionaCursor(int linha, int coluna){
+char Buffer::getChar(int linha, int coluna) const {
     if (linha >= 0 && linha < numLinhas && coluna >= 0 && coluna < numColunas) {
-        cursorLinha = linha;
-        cursorColuna = coluna;
+        return buffer[linha][coluna];
+    }
+    return ' ';
+}
+
+//retorna o caracter na posição
+void Buffer::setChar(int linha, int coluna, char c) {
+    if (linha >= 0 && linha < numLinhas && coluna >= 0 && coluna < numColunas) {
+        buffer[linha][coluna] = c;
     }
 }
-
-//atualiza a posição do cursor
-void Buffer::atualizaCursor() {
-    if (cursorColuna >= numColunas) {
-        cursorColuna = 0;
-        cursorLinha++;
-    }
-
-    if (cursorLinha >= numLinhas) {
-        cursorLinha = 0; //?? - voltar ao inicio e a melhor opcao?
-    }
-}
-
-//atualiza a posição com uma cidade
-void Buffer::escreve(char c){
-    if (cursorLinha < numLinhas && cursorColuna < numColunas) {
-        buffer[cursorLinha][cursorColuna++] = c;
-    }
-    atualizaCursor();
-}
-
-//move cursor
-void Buffer::escreve(const char* str){
-    while (*str != '\0' && cursorColuna < numColunas) {
-        escreve(*str++);
-    }
-}
-
-//atualiza a posição com uma caravana??
-void Buffer::escreve(int numero) {
-    string numStr = to_string(numero);
-    escreve(numStr.c_str());
-}
-
-//escreve cada character da string
-void Buffer::escreve(const string& str) {
-    for (char c : str) {
-        escreve(c);
-    }
-}
-
-
-Buffer& Buffer::operator<<(char c) {
-    escreve(c);
-    return *this;
-}
-
-Buffer& Buffer::operator<<(const char* str) {
-    escreve(str);
-    return *this;
-}
-
-Buffer& Buffer::operator<<(int numero) {
-    escreve(numero);
-    return *this;
-}
-
-
-
-
-
-

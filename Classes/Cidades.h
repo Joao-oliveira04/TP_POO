@@ -9,13 +9,14 @@
 #include "Buffer.h"
 #include "Caravanas.h"
 #include "Deserto.h"
+#include "Jogo.h"
 
 class Cidade {
 private:
     std::string nome; // Nome único da cidade
     int posX, posY; // Posição da cidade no mapa
+    int nCaravanas = 0; // Número de caravanas na cidade
     std::vector<Caravana*> caravanas; // Caravanas dentro da cidade
-    std::vector<Caravana*> caravanas_buy; // Caravanas para comprar
     Buffer& buffer;
 
 public:
@@ -23,13 +24,9 @@ public:
     std::string getNome() const;
     int getPosX() const;
     int getPosY() const;
+    int getnCaravanas() const;
     void entraCaravana(Caravana* caravana);
     void saiCaravana(Caravana* caravana);
-    void addCaravana(Caravana* caravana);
-    void buyCaravana(Caravana* caravana);
-    void buyTripulantes(Caravana* caravana,int i); //i = quantidade de tripulantes
-    void buyMercadoria(Caravana* caravana, int i); //i = quantidade de mercadoria
-    void sellMercadoria(Caravana* caravana, int i); //i = quantidade de mercadoria
     void listarCaravanas() const;
     bool isAccessible() const;
 };

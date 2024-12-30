@@ -19,6 +19,7 @@ private:
     std::vector<Barbara*> barbaras;  // caravana bárbaras
     int moedasJogador;   // moedas jogador
     int instantesDecorridos;  // contador de instantes
+    int nBarbaras = 0;  // contador de barbaras
     int combatesVencidos; // contador de combates
     bool jogoAtivo = true;  // estado do jogo
 
@@ -30,6 +31,7 @@ private:
 
 
 public:
+    int getMoedasJogador() const { return moedasJogador; }
     Jogo(int linhas, int colunas, int moedasIniciais);
     ~Jogo();
 

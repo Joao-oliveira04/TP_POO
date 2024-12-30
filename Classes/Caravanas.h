@@ -32,25 +32,24 @@ protected:
     int moedas;               // moedas do jogador
     char direcaoAtual;        // Última direção de movimento
     static int totalCaravanas;// Número da caravana
-
-    void encontrarPosicaoValida(); // Metodo para encontrar uma posição válida
     bool autonomo = false; // Indica se a caravana está em modo autonomo
 
 public:
     Caravana(std::string t, int trip, int capAgua, int capCarga, int movimentos, Buffer& buf);
     virtual ~Caravana();
 
-    virtual void mover(char direcao);
+    void encontrarPosicaoValida(); // Metodo para encontrar uma posição válida
     virtual void comportamentoAutonomo(); // Metodo abstrato
     void consumirAgua(int i);
     bool semAgua() const;
     bool semTripulantes() const;
 
     char getSymbol() const;   // Retorna o símbolo da caravana
+    string getTipo() const;     // Retorna o tipo da caravana
     int getPosX() const;      // Retorna a posição X
     int getPosY() const;      // Retorna a posição Y
     void setPos(int x, int y);// Atualiza a posição
-    Caravana* getCaravanaClose(Buffer &buf);   // retorna a caravana nas casas adjacentes
+    Caravana* getCaravanaClose(vector<Caravana*>);  // retorna a caravana nas casas adjacentes
     void destruir();   // destroi a caravana
     int getTripulantes() {return tripulantes;}// tripulantes das caravanas
     void setTripulantes(int i); // tripulantes
@@ -58,7 +57,7 @@ public:
     void setMoedasJogador(int i); // moedas depois da atualizacao
     int getMoedasJogador() {return moedas;}// moedas antes da atualizacao
     Caravana* getCaravana(int nCaravana);// retorna a caravana
-    bool moveCaravana(Caravana* caravana, char direcao);
+    bool moveCaravana(Caravana* caravana, char direcao,Buffer& buffer); // move a caravana
     void combate(Caravana* outraCaravana);
     int getCargaAtual() {return cargaAtual;}
     void setCargaAtual(int novaCarga) {cargaAtual = novaCarga;}
@@ -90,15 +89,7 @@ public:
     void moverSemTripulantes();
 };
 
-// Classe Derivada: Infetada (caravana secreta)
-// Esta caravana se move aleatoriamente e pode infectar outras caravanas
-// caravanas infectadas perdem 20% dos tripulantes
-class Infetada : public Caravana {
-public:
-    Infetada(int x, int y, Buffer& buffer);
-    void comportamentoAutonomo(Buffer& buffer);
-    void infectar(Caravana* caravana);
-};
+
 
 
 #endif // CARAVANA_H
